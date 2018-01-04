@@ -1,0 +1,601 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Puzzle Game</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+        body {
+            margin-top: 10px;
+        }
+
+        body {
+            background-image: linear-gradient(to bottom, #d4dae4, #d4dae4);
+        }
+
+        html {
+            min-height: 100%;
+        }
+
+        button {
+            width: 50px;
+            height: 50px;
+            
+            background-image: linear-gradient(to bottom, #2980b9, #2980b9);
+           
+            font-family: Arial;
+            color: #ffffff;
+            font-size: 30px;
+            text-decoration: none;
+            text-shadow: 1px 1px 3px #666666;
+            box-shadow: 1px 1px 3px #666666;
+            animation: pop 1s;
+            
+        }
+        .text{
+            font-size: 20px;
+            color: blue;
+        }
+        .reset {
+            padding-right: 20px;
+            width: 100px;
+            height: 50px;
+            
+            background-image: linear-gradient(to bottom, #6ea5ca, #2980b9);
+           
+            font-family: Arial;
+            color: black;
+            font-size: 30px;
+            
+        }
+        .level{
+            padding-right: 3px;
+            width: 200px;
+            height: 200px;
+            padding-top: 9px;
+            padding-bottom: 8px;
+            
+            background-image: linear-gradient(to bottom, #2980b9, #2980b9);
+           
+            font-family: Arial;
+            color: black;
+            font-size: 30px; 
+        }
+
+        .row {
+            padding-left: 100px;
+        }
+        .row1 {
+            padding-left: 200px;
+        }
+
+        .buttonX {
+            background-image: linear-gradient(to bottom, #9834db, #8029b9);
+            font-weight: bold;
+            /* border-color: green; */
+           
+        }
+
+        .buttonO {
+            background-image: linear-gradient(to bottom, #98db34, #80b929);
+            font-weight: bold;
+            /* border-color: blue; */
+        }
+
+        .parent {
+            text-align: center;
+        }
+
+        .child {
+            display: inline;
+        }
+
+        h1 {
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            line-height: 50px;
+            color: orange;
+            animation-name: example;
+            animation-duration: 1s;
+        }
+        
+        h6{
+            color: purple;
+        }
+
+        @keyframes example {
+            0% {
+                letter-spacing: 50px;
+            }
+
+            100% {
+                letter-spacing: normal;
+            }
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+        .checkword{
+            width: 130px;
+            text-align: center;
+            float: left;
+            margin-left: 100px;
+            font-size: 20px;
+            background-image: linear-gradient(to bottom, #6685a8, #6685a8);
+        }
+        .clearword{
+            width: 130px;
+            text-align: center;
+            float: left;
+            margin-left: 100px;
+            font-size: 20px;
+            background-image: linear-gradient(to bottom, #6685a8, #6685a8);
+        }
+        .col-xl{
+            float: left;
+            margin-left: 130px;
+        }
+    </style>>
+
+    <script>
+        var currentTurn = "X"
+        var rows = [];
+
+        var selectedChars = "";
+        var selectedLabelIds = [];
+        var totalPoints = 0;
+        var crossedOffWords = [];
+
+        var wordList = [
+                    {label:"text1", value:$("#text1").text()},
+                    {label:"text2", value:$("#text2").text()},
+                    {label:"text3", value:$("#text3").text()},
+                    {label:"text4", value:$("#text4").text()},
+                    {label:"text5", value:$("#text5").text()},
+                    {label:"text6", value:$("#text6").text()},
+                    {label:"text7", value:$("#text7").text()},
+                    {label:"text8", value:$("#text8").text()},
+                    {label:"text9", value:$("#text9").text()},
+                    {label:"text10", value:$("#text10").text()},
+                    {label:"text11", value:$("#text11").text()},
+                    {label:"text12", value:$("#text12").text()},
+                    {label:"text13", value:$("#text13").text()},
+                    {label:"text14", value:$("#text14").text()},
+                    {label:"text15", value:$("#text15").text()},
+                    {label:"text16", value:$("#text16").text()},
+                    {label:"text17", value:$("#text17").text()},
+                    {label:"text18", value:$("#text18").text()},
+                    {label:"text19", value:$("#text19").text()},
+                    {label:"text20", value:$("#text20").text()},
+                    {label:"text21", value:$("#text21").text()},
+                    {label:"text22", value:$("#text22").text()},
+                    {label:"text23", value:$("#text22").text()},
+                    {label:"text24", value:$("#text24").text()},
+                    {label:"text25", value:$("#text25").text()}
+                
+                ];
+
+        //JSON
+        var model = [];
+
+        for (let i = 0; i < 13; i++) {
+            model[i] = [];
+            for (let j = 0; j <13; j++) {
+                model[i][j] = "BLANK";
+            }
+        }
+
+        function level1(){
+            //rows.clear();
+            rows = [];
+            rows.push('SMRTGHAPPINESSOB');
+            rows.push('ACFJXNMKXYEZWJJE');
+            rows.push('VSIATTRACTIVETHA');
+            rows.push('EFVEGGIESSSBEOPU');
+            rows.push('GLOKNCEHUTEYTWIT');
+            rows.push('ARJRLCUYCRECXSGI');
+            rows.push('NHLBGAEECGOMTSYF');
+            rows.push('XYBCLIYLEVOLDEYU');
+            rows.push('BJDTROVLSQVXEUTL');
+            rows.push('SJYKCULESOUSSGIL');
+            rows.push('HFYRGORGEOUSSEVK');
+            rows.push('KGYCCEPFXEEQEOEI');
+            rows.push('HONDGLYXPRSVLOGN');
+            rows.push('JVZELIBRARYSBMND');
+            rows.push('ACFJXNMKXYEZWJOJ');
+            rows.push('ACFJXNMKXYEZWJLJ');
+
+            loadLetters();
+            loadText1();
+
+            totalPoints = 0;
+            $("#totalPoints").text(totalPoints);
+        }
+
+        function level2(){
+            //rows.clear();
+            rows = [];
+            rows.push('MMENTOMOLOGYIAUT');
+            rows.push('AELPHYSIOLOGYJSS');
+            rows.push('NTEENGINEERINGBS');
+            rows.push('TECNEICSRETUPMOC');
+            rows.push('HOTIMHAAOPMAFYTI');
+            rows.push('RRRCSEISMOLOGIST');
+            rows.push('OOOIYCVZYEROARNA');
+            rows.push('PLNDTMOGOELSSTYM');
+            rows.push('OOIEROONSOHCTSME');
+            rows.push('LGCMLLTTCRIIRIOH');
+            rows.push('OYSOOOREASWTOMNT');
+            rows.push('GAGELYXSYNBENEOA');
+            rows.push('YYGOLOEHCRANOHXM');
+            rows.push('ADGQHWPDPRXEMCAW');
+            rows.push('JYZELIBIOLOGYMTS');
+            rows.push('OCEANOGRAPHYBMSS');
+
+            loadLetters();
+            loadText2();
+
+            totalPoints = 0;
+            $("#totalPoints").text(totalPoints);
+        }
+
+        //In this sample usage, I replace all text inside a <div id="content"> that looks like a US telephone number with a tel: scheme link:
+
+        // findAndReplaceDOMText(document.getElementById('content'), {
+        //     find:/\b(\d\d\d-\d\d\d-\d\d\d\d)\b/g,
+        //     replace:function (portion) {
+        //         var a = document.createElement('a');
+        //         a.className = 'telephone';
+        //         a.href = 'tel:' + portion.text.replace(/\D/g, '');
+        //         a.textContent = portion.text;
+        //         return a;
+        //     }
+        // });
+
+        function loadText1()
+        {
+            let replacements=["ATTRACTIVE","BLESSED","BEAUTIFUL","COLLEGE","FORGIVE","GORGEOUS","GUESS","HAPPINESS","JOY","KIND","LIBRARY","LONGEVITY","LOVELY","LUCKY","SCIENCE","SUCCESS","SWEET","VEGAN","VEGGIES","","","","","","","","",""],
+                i = -3, j=0;
+
+            $("body").html(function(j, html) {
+                return html.replace(/Insert Text Here/g,function() {
+                    return replacements[i++];
+                });
+            });
+        }
+
+        function loadText2()
+        {
+            selectedChars = "";
+            crossedOffWords = [];
+            let replacements=["ANATOMY","ANTHROPOLOGY","ARCHEOLOGY","ASTRONOMY","BIOLOGY","BOTANY","CHEMISTRY","COMPUTERSCIENCE","ECOLOGY","ELECTRONICS","ENGINEERING","ENTOMOLOGY","FORESTRY","GENETICS","GEOLOGY","MATHEMATICS","MEDICINE","METEOROLOGY","OCEANOGRAPHY","PALEONTOLOGY","PHYSICS","PHYSIOLOGY","SEISMOLOGIST","TAXONOMY","ZOOLOGY"],
+                i = -3;
+
+            for( let idx = 0; idx < wordList.length; idx++){
+                $("#" + wordList[idx].label).text("Insert Text Here");
+                $("#" + wordList[idx].label).css("text-decoration", "none");
+            }
+            $("body").html(function(j, html) {
+                return html.replace(/Insert Text Here/g,function() {
+                    return replacements[i++];
+                });
+            });
+        }
+
+        function clearText()
+        {
+            var replacements=["ATTRACTIVE","BLESSED","COLLEGE","FORGIVE","GORGEOUS","GUESS","HAPPINESS","JOY","LIBRARY","LOVELY","LUCKY","SCIENCE","SUCCESS","SWEET","VEGAN","VEGGIES"];
+            
+        }
+
+        function loadLetters()
+        {
+            var node = document.getElementById("loadArray");
+            node.innerHTML = "";
+            var counter = 0;
+            
+            for(let i = 0; i < rows.length; i++)
+            {
+                let row = rows[i];
+                node.innerHTML += "<div>";
+                for(let j = 0; j < row.length; j++)
+                {
+                    counter++;
+                    let char = row[j];
+                    var btnName = "button" + counter;
+                    node.innerHTML += "<button class='button' id='" + btnName + "' onclick=\"buttonClick('" + btnName + "');\" >" + char + "</button>";
+                }
+                node.innerHTML += "</div>";
+            }
+        }
+
+        function resetButtons() {
+            $("#selectedChars").text("");
+            resetHighlightedChars();
+            selectedChars ="";
+            totalPoints = 0;
+            displayTotalPoints();
+
+            for( let i = 0; i < wordList.length; i++)
+            {
+                $("#" + wordList[i].label).css("text-decoration", "none");
+            }
+        }
+
+        function buttonClick(identifier) {
+            socket.emit('play', {
+                "id" : gameId,
+                "play" : identifier,
+                "player" : player,
+            });
+
+            selectedChars = selectedChars + document.getElementById(identifier).innerHTML;
+            selectedLabelIds.push(identifier);
+            displaySelectedChars();            
+        
+        }
+
+        function serverPlay(identifier) {            
+            //document.getElementById(identifier).disabled = true;
+
+            let x = identifier.play[0];
+            let y = identifier.play[1];
+            
+
+            // if (model[x][y] != "BLANK") {
+            //     return;
+            // }
+            if (identifier.player == "X") {
+                document.getElementById(identifier.play).classList.add("buttonX") //assign color
+                model[x][y] = document.getElementById(identifier.play).innerText; //update model 
+            } else {
+                document.getElementById(identifier.play).classList.add("buttonO")
+                model[x][y] = document.getElementById(identifier.play).innerText;
+                //currentTurn = "X"
+            }
+
+            document.getElementById(identifier.play).innerText = model[x][y];
+            
+        }
+
+        function displaySelectedChars(){
+            //document.getElementById("selectedChars").innerText = selectedChars;
+            $("#selectedChars").text(selectedChars);
+        }
+
+        function displayTotalPoints(){
+            //document.getElementById("selectedChars").innerText = selectedChars;
+            $("#totalPoints").text(totalPoints);
+        }
+
+        function doCheck(){
+            var resetSelectedChars = false;
+            let puzzleWords = [];
+
+            for ( let x = 0; x < wordList.length; x++ ){
+                if (wordList[x].value.trim() != ""){
+                    puzzleWords.push(wordList[x].value);
+                }
+            }
+            
+            for( let i = 0; i < wordList.length; i++ ){
+                if( selectedChars.toUpperCase() == wordList[i].value.toUpperCase() && wordList[i].value.trim() != ""){
+                    //console.log('match:' + selectedChars.toUpperCase() + ' vs. ' + wordList[i].value.toUpperCase());
+                    //totalPoints = totalPoints + 1;
+                    crossedOffWords.push(selectedChars);
+                    totalPoints = totalPoints + 1;
+                    displayTotalPoints();
+
+                    resetSelectedChars = true;
+                    $("#" + wordList[i].label).css("text-decoration", "line-through");
+                    selectedChars = "";
+                    $("#selectedChars").text("");
+                    selectedLabelIds = [];
+
+                    if(crossedOffWords.length == puzzleWords.length){
+                        alert("Congratulation, you are the winner!");
+                    }
+                }
+            }
+
+            // if (resetSelectedChars){
+            //     resetHighlightedChars();
+            // }
+        }
+
+        function resetHighlightedChars(){
+            $("#loadArray").children("button").each(function( index ) {
+                //console.log( index + ": " + $( this ).text() );
+                $(this).removeClass();
+            });
+        }
+
+        function resetDisplaySelectedWord(){
+            for (let i = 0; i < selectedLabelIds.length; i++){
+                $("#" + selectedLabelIds[i]).removeClass();
+            }
+
+            selectedChars = "";
+            $("#selectedChars").text(selectedChars);
+        }
+
+        function go() {
+            var delay = 1000;
+            for (let i = 0; i < 15; i++) {
+                for (let j = 0; j < 15; j++) {
+                    var name = "" + i + j;
+                    (function (n, d) {
+                        setTimeout(function () {
+                            if(!document.getElementById(n))
+                                return;
+                            document.getElementById(n).style.animationPlayState = "running";
+                            document.getElementById(n).style.visibility = "visible";
+
+                        }, d);
+                    })(name, delay);
+
+                    delay += 100;
+                }
+            }
+        }
+
+        go();
+    </script>
+
+</head>
+
+<body class="parent" body onload="level1()">
+    <h1> The Word Search Game</h1>
+    <h6 id="networkStatus">Connecting to Network...</h6><br>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <div>Selected Characters: <span id="selectedChars"></span></div><br>
+                <div>Earned Point: <span id="totalPoints"></span></div><br><br>
+            </div>
+            <div class="col-xl">
+                <button class="clearword" name="clear" onClick="resetDisplaySelectedWord();">Clear Word</button>            
+                <button class="checkword" name="doCheck" onClick="doCheck();">Check Point</button>            
+            </div>
+            <br>
+        </div>
+        <div id="loadArray"></div>
+       
+        <div class="row" >
+            <!-- <div class="col-xl-">
+                01. &nbsp;
+                <button id="00" onclick="buttonClick('00')"></button><button id="01" onclick="buttonClick('01')"></button><button id="02" onclick="buttonClick('02')"></button><button id="03" onclick="buttonClick('03')"></button><button id="04" onclick="buttonClick('04')"></button><button id="05" onclick="buttonClick('05')"></button><button id="06" onclick="buttonClick('06')"></button><button id="07" onclick="buttonClick('07')"></button><button id="08" onclick="buttonClick('08')"></button><button id="09" onclick="buttonClick('09')"></button><button id="10" onclick="buttonClick('10')"></button><button id="11" onclick="buttonClick('11')"></button><button id="12" onclick="buttonClick('12')"></button><button id="13" onclick="buttonClick('13')"></button><button id="13-1" onclick="buttonClick('13-1')"></button><button id="13-2" onclick="buttonClick('13-2')"></button><br>
+                02. &nbsp;
+                <button id="21" onclick="buttonClick('21')"></button><button id="22" onclick="buttonClick('22')"></button><button id="23" onclick="buttonClick('23')"></button><button id="24" onclick="buttonClick('24')"></button><button id="25" onclick="buttonClick('25')"></button><button id="26" onclick="buttonClick('26')"></button><button id="27" onclick="buttonClick('27')"></button><button id="28" onclick="buttonClick('28')"></button><button id="29" onclick="buttonClick('29')"></button><button id="30" onclick="buttonClick('30')"></button><button id="31" onclick="buttonClick('31')"></button><button id="32" onclick="buttonClick('32')"></button><button id="33" onclick="buttonClick('33')"></button><button id="34" onclick="buttonClick('34')"></button><button id="34-1" onclick="buttonClick('34-1')"></button><button id="34-2" onclick="buttonClick('34-2')"></button><br>
+                03. &nbsp;
+                <button id="41" onclick="buttonClick('41')"></button><button id="42" onclick="buttonClick('42')"></button><button id="43" onclick="buttonClick('43')"></button><button id="44" onclick="buttonClick('44')"></button><button id="45" onclick="buttonClick('45')"></button><button id="46" onclick="buttonClick('46')"></button><button id="47" onclick="buttonClick('47')"></button><button id="48" onclick="buttonClick('48')"></button><button id="49" onclick="buttonClick('49')"></button><button id="50" onclick="buttonClick('50')"></button><button id="51" onclick="buttonClick('51')"></button><button id="52" onclick="buttonClick('52')"></button><button id="53" onclick="buttonClick('53')"></button><button id="54" onclick="buttonClick('54')"></button><button id="54-1" onclick="buttonClick('54-1')"></button><button id="54-2" onclick="buttonClick('54-2')"></button><br>
+                04. &nbsp;
+                <button id="61" onclick="buttonClick('61')"></button><button id="62" onclick="buttonClick('62')"></button><button id="63" onclick="buttonClick('63')"></button><button id="64" onclick="buttonClick('64')"></button><button id="65" onclick="buttonClick('65')"></button><button id="66" onclick="buttonClick('66')"></button><button id="67" onclick="buttonClick('67')"></button><button id="68" onclick="buttonClick('68')"></button><button id="69" onclick="buttonClick('69')"></button><button id="70" onclick="buttonClick('70')"></button><button id="71" onclick="buttonClick('71')"></button><button id="72" onclick="buttonClick('72')"></button><button id="73" onclick="buttonClick('73')"></button><button id="74" onclick="buttonClick('74')"></button><button id="74-1" onclick="buttonClick('74-1')"></button><button id="74-2" onclick="buttonClick('74-2')"></button><br>
+                05. &nbsp;
+                <button id="81" onclick="buttonClick('81')"></button><button id="82" onclick="buttonClick('82')"></button><button id="83" onclick="buttonClick('83')"></button><button id="84" onclick="buttonClick('84')"></button><button id="85" onclick="buttonClick('85')"></button><button id="86" onclick="buttonClick('86')"></button><button id="87" onclick="buttonClick('87')"></button><button id="88" onclick="buttonClick('88')"></button><button id="89" onclick="buttonClick('89')"></button><button id="90" onclick="buttonClick('90')"></button><button id="91" onclick="buttonClick('91')"></button><button id="92" onclick="buttonClick('92')"></button><button id="93" onclick="buttonClick('93')"></button><button id="94" onclick="buttonClick('94')"></button><button id="94-1" onclick="buttonClick('94-1')"></button><button id="94-2" onclick="buttonClick('94-2')"></button><br>
+                06. &nbsp;
+                <button id="101" onclick="buttonClick('101')"></button><button id="102" onclick="buttonClick('102')"></button><button id="103" onclick="buttonClick('83')"></button><button id="104" onclick="buttonClick('104')"></button><button id="105" onclick="buttonClick('105')"></button><button id="106" onclick="buttonClick('106')"></button><button id="107" onclick="buttonClick('107')"></button><button id="108" onclick="buttonClick('108')"></button><button id="109" onclick="buttonClick('109')"></button><button id="110" onclick="buttonClick('110')"></button><button id="111" onclick="buttonClick('111')"></button><button id="112" onclick="buttonClick('112')"></button><button id="113" onclick="buttonClick('113')"></button><button id="114" onclick="buttonClick('114')"></button><button id="114-1" onclick="buttonClick('114-1')"></button><button id="114-2" onclick="buttonClick('114-2')"></button><br>
+                07. &nbsp;
+                <button id="121" onclick="buttonClick('121')"></button><button id="122" onclick="buttonClick('122')"></button><button id="123" onclick="buttonClick('123')"></button><button id="124" onclick="buttonClick('124')"></button><button id="125" onclick="buttonClick('125')"></button><button id="126" onclick="buttonClick('126')"></button><button id="127" onclick="buttonClick('127')"></button><button id="128" onclick="buttonClick('128')"></button><button id="129" onclick="buttonClick('129')"></button><button id="130" onclick="buttonClick('130')"></button><button id="131" onclick="buttonClick('131')"></button><button id="132" onclick="buttonClick('132')"></button><button id="133" onclick="buttonClick('133')"></button><button id="134" onclick="buttonClick('134')"></button><button id="134-1" onclick="buttonClick('134-1')"></button><button id="134-2" onclick="buttonClick('134-2')"></button><br>
+                08. &nbsp;
+                <button id="141" onclick="buttonClick('141')"></button><button id="142" onclick="buttonClick('142')"></button><button id="143" onclick="buttonClick('143')"></button><button id="144" onclick="buttonClick('144')"></button><button id="145" onclick="buttonClick('145')"></button><button id="146" onclick="buttonClick('146')"></button><button id="147" onclick="buttonClick('147')"></button><button id="148" onclick="buttonClick('148')"></button><button id="149" onclick="buttonClick('149')"></button><button id="150" onclick="buttonClick('150')"></button><button id="151" onclick="buttonClick('151')"></button><button id="152" onclick="buttonClick('152')"></button><button id="153" onclick="buttonClick('153')"></button><button id="154" onclick="buttonClick('154')"></button><button id="154-1" onclick="buttonClick('154-1')"></button><button id="154-2" onclick="buttonClick('154-2')"></button><br>
+                09. &nbsp;
+                <button id="161" onclick="buttonClick('161')"></button><button id="162" onclick="buttonClick('162')"></button><button id="163" onclick="buttonClick('163')"></button><button id="164" onclick="buttonClick('164')"></button><button id="165" onclick="buttonClick('165')"></button><button id="166" onclick="buttonClick('166')"></button><button id="167" onclick="buttonClick('167')"></button><button id="168" onclick="buttonClick('168')"></button><button id="169" onclick="buttonClick('169')"></button></button><button id="170" onclick="buttonClick('170')"></button><button id="171" onclick="buttonClick('171')"></button><button id="172" onclick="buttonClick('172')"></button><button id="173" onclick="buttonClick('173')"></button><button id="174" onclick="buttonClick('174')"></button><button id="174-1" onclick="buttonClick('174-1')"></button><button id="174-2" onclick="buttonClick('174-2')"></button><br>
+                10. &nbsp;
+                <button id="181" onclick="buttonClick('181')"></button><button id="182" onclick="buttonClick('182')"></button><button id="183" onclick="buttonClick('183')"></button><button id="184" onclick="buttonClick('184')"></button><button id="185" onclick="buttonClick('185')"></button><button id="186" onclick="buttonClick('186')"></button><button id="187" onclick="buttonClick('187')"></button><button id="188" onclick="buttonClick('188')"></button><button id="189" onclick="buttonClick('189')"></button><button id="190" onclick="buttonClick('190')"></button><button id="191" onclick="buttonClick('191')"></button><button id="192" onclick="buttonClick('192')"></button><button id="193" onclick="buttonClick('193')"></button><button id="194" onclick="buttonClick('194')"></button><button id="194-1" onclick="buttonClick('194-1')"></button><button id="194-2" onclick="buttonClick('194-2')"></button><br>
+                11. &nbsp;
+                <button id="201" onclick="buttonClick('201')"></button><button id="202" onclick="buttonClick('202')"></button><button id="203" onclick="buttonClick('203')"></button><button id="204" onclick="buttonClick('204')"></button><button id="205" onclick="buttonClick('205')"></button><button id="206" onclick="buttonClick('206')"></button><button id="207" onclick="buttonClick('207')"></button><button id="208" onclick="buttonClick('208')"></button><button id="209" onclick="buttonClick('209')"></button><button id="210" onclick="buttonClick('210')"></button><button id="211" onclick="buttonClick('211')"></button><button id="212" onclick="buttonClick('212')"></button><button id="213" onclick="buttonClick('213')"></button><button id="214" onclick="buttonClick('214')"></button><button id="214-1" onclick="buttonClick('214-1')"></button><button id="214-2" onclick="buttonClick('214-2')"></button><br>
+                12. &nbsp;
+                <button id="221" onclick="buttonClick('221')"></button><button id="222" onclick="buttonClick('222')"></button><button id="223" onclick="buttonClick('223')"></button><button id="224" onclick="buttonClick('224')"></button><button id="225" onclick="buttonClick('225')"></button><button id="226" onclick="buttonClick('226')"></button><button id="227" onclick="buttonClick('227')"></button><button id="228" onclick="buttonClick('228')"></button><button id="229" onclick="buttonClick('229')"></button><button id="230" onclick="buttonClick('230')"></button><button id="231" onclick="buttonClick('231')"></button><button id="232" onclick="buttonClick('232')"></button><button id="233" onclick="buttonClick('233')"></button><button id="234" onclick="buttonClick('234')"></button><button id="234-1" onclick="buttonClick('234-1')"></button><button id="234-2" onclick="buttonClick('234-2')"></button><br>
+                13. &nbsp;
+                <button id="241" onclick="buttonClick('241')"></button><button id="242" onclick="buttonClick('242')"></button><button id="243" onclick="buttonClick('243')"></button><button id="244" onclick="buttonClick('244')"></button><button id="245" onclick="buttonClick('245')"></button><button id="246" onclick="buttonClick('246')"></button><button id="247" onclick="buttonClick('247')"></button><button id="248" onclick="buttonClick('248')"></button><button id="249" onclick="buttonClick('249')"></button><button id="250" onclick="buttonClick('250')"></button><button id="251" onclick="buttonClick('251')"></button><button id="252" onclick="buttonClick('252')"></button><button id="253" onclick="buttonClick('253')"></button><button id="254" onclick="buttonClick('254')"></button><button id="254-1" onclick="buttonClick('254-1')"></button><button id="254-2" onclick="buttonClick('254-2')"></button><br>
+                14. &nbsp;
+                <button id="261" onclick="buttonClick('261')"></button><button id="262" onclick="buttonClick('262')"></button><button id="263" onclick="buttonClick('263')"></button><button id="264" onclick="buttonClick('264')"></button><button id="265" onclick="buttonClick('265')"></button><button id="266" onclick="buttonClick('266')"></button><button id="267" onclick="buttonClick('267')"></button><button id="268" onclick="buttonClick('268')"></button><button id="269" onclick="buttonClick('269')"></button><button id="270" onclick="buttonClick('270')"></button><button id="271" onclick="buttonClick('271')"></button><button id="272" onclick="buttonClick('272')"></button><button id="273" onclick="buttonClick('273')"></button><button id="274" onclick="buttonClick('274')"></button><button id="274-1" onclick="buttonClick('274-1')"></button><button id="274-2" onclick="buttonClick('274-2')"></button><br>    
+                15. &nbsp;
+                <button id="281" onclick="buttonClick('281')"></button><button id="282" onclick="buttonClick('282')"></button><button id="283" onclick="buttonClick('283')"></button><button id="284" onclick="buttonClick('284')"></button><button id="285" onclick="buttonClick('285')"></button><button id="286" onclick="buttonClick('286')"></button><button id="287" onclick="buttonClick('287')"></button><button id="288" onclick="buttonClick('288')"></button><button id="299" onclick="buttonClick('289')"></button><button id="290" onclick="buttonClick('290')"></button><button id="291" onclick="buttonClick('291')"></button><button id="292" onclick="buttonClick('292')"></button><button id="293" onclick="buttonClick('293')"></button><button id="294" onclick="buttonClick('294')"></button><button id="294-1" onclick="buttonClick('294-1')"></button><button id="294-2" onclick="buttonClick('294-2')"></button><br>    
+                16. &nbsp;
+                <button id="301" onclick="buttonClick('301')"></button><button id="302" onclick="buttonClick('302')"></button><button id="303" onclick="buttonClick('303')"></button><button id="304" onclick="buttonClick('304')"></button><button id="305" onclick="buttonClick('305')"></button><button id="306" onclick="buttonClick('306')"></button><button id="307" onclick="buttonClick('307')"></button><button id="308" onclick="buttonClick('308')"></button><button id="309" onclick="buttonClick('309')"></button><button id="310" onclick="buttonClick('310')"></button><button id="311" onclick="buttonClick('311')"></button><button id="312" onclick="buttonClick('312')"></button><button id="313" onclick="buttonClick('313')"></button><button id="314" onclick="buttonClick('314')"></button><button id="315" onclick="buttonClick('315')"></button><button id="316" onclick="buttonClick('316')"></button><br>    
+                <!--<button id="81" onclick="socket.emit('requestGame', '')">Play</button>
+            </div>    -->
+           
+        </div>
+        <div class="row">
+        <br><br>
+        </div>
+        <div class="row" id="keyword">
+            <!-- <div class="col-sm"></div> -->
+            <div class="col-sm">
+                <text id="text1" class="text">Insert Text Here</text><br>
+                <text id="text2" class="text">Insert Text Here</text><br>
+                <text id="text3" class="text">Insert Text Here</text><br>
+                <text id="text4" class="text">Insert Text Here</text><br>
+                <text id="text5" class="text">Insert Text Here</text><br>
+                <text id="text6" class="text">Insert Text Here</text><br>
+                <text id="text7" class="text">Insert Text Here</text><br>
+            </div>
+            <div class="col-sm">
+                <text id="text8" class="text">Insert Text Here</text><br>
+                <text id="text9" class="text">Insert Text Here</text><br>
+                <text id="text10" class="text">Insert Text Here</text><br>
+                <text id="text11" class="text">Insert Text Here</text><br>
+                <text id="text12" class="text">Insert Text Here</text><br>
+                <text id="text13" class="text">Insert Text Here</text><br>                
+            </div>
+            <div class="col-sm">
+                <text id="text14" class="text">Insert Text Here</text><br>
+                <text id="text15" class="text">Insert Text Here</text><br>
+                <text id="text16" class="text">Insert Text Here</text><br>
+                <text id="text17" class="text">Insert Text Here</text><br>
+                <text id="text18" class="text">Insert Text Here</text><br>
+                <text id="text19" class="text">Insert Text Here</text><br>
+            </div>
+            <div class="col-sm">    
+                <text id="text20" class="text">Insert Text Here</text><br>
+                <text id="text21" class="text">Insert Text Here</text><br>
+                <text id="text22" class="text">Insert Text Here</text><br>
+                <text id="text23" class="text">Insert Text Here</text><br>
+                <text id="text24" class="text">Insert Text Here</text><br>
+                <text id="text25" class="text">Insert Text Here</text><br>
+            </div>
+            <!-- <div class="col-sm"></div> -->
+        </div>
+    </div>
+    <br>
+    <table>  
+        <tr>
+            <form id="myForm">
+                <button class="reset" onclick="resetButtons()">Reset</button>
+                <button class="reset" onclick="level1()">Level1</button>
+                <button class="reset" onclick="level2()">Level2</button>
+            </form>&nbsp;
+            
+        </tr>
+    </table>
+    <div class="row">
+        &nbsp;
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+
+    <script>
+    
+        var gameId; //id of the game as sent by the server
+        var player; //X or O
+
+        var socket = io();
+
+        socket.emit("requestGame", "hi there.");
+
+        socket.on("Start Game", function(msg){
+            gameId = msg.id;
+            player = msg.playerAssignment;
+            document.getElementById("networkStatus").innerHTML = "Found a game. You are " + player;
+        });
+
+        socket.on("play", function(msg){
+            if (typeof(msg) != "undefined") {
+                serverPlay(msg);
+            }
+        });
+
+         
+        socket.on("level2", function(msg){
+            level2();
+        })  
+        socket.on("play", function(msg){
+            serverPlay(msg);
+        });  
+        
+        
+
+
+    </script>
+</body>
+
+</html>

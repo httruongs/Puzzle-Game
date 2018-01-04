@@ -1,0 +1,20 @@
+Cryptography:
+
+Asymmetric and Symmnetric
+
+Asymmetric : Differnt keys to lock and unlock
+
+Symmetric : same keys
+
+Caesar Cipher:
+
+-Plain Text -- "Attack"
+-Cipher Text -- "DWWDFN"
+-Key - 3 - "D"
+
+Adjust for Augustus:
+-Key - -1/25 - "Z"
+
+What do we want on the internet:
+Only intended recipent to be able to read our message
+-The internet is like a lot of postcards.
